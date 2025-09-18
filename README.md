@@ -1,6 +1,6 @@
 # 🔗 VeriChain - Blockchain Certificate Verification
 
-> **Winner of [Hackathon Name] 2024** 🏆  
+> **Winner of Stellar 2025** 🏆  
 > Tamper-proof, decentralized certificate verification using blockchain technology
 
 [![Deployed on Sepolia](https://img.shields.io/badge/Deployed-Sepolia%20Testnet-blue)](https://sepolia.etherscan.io/address/0x609B79dde0dE6D2A1a740486782E5D14B58FbD2c)
