@@ -1,54 +1,115 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
-// Import secure, standard contracts from the OpenZeppelin library we just installed
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
-// Our contract is defined as an NFT (ERC721) and is Ownable
-// "Ownable" means only the creator of the contract can perform certain actions
 contract CertificateNFT is ERC721, Ownable {
-    // A counter to ensure every NFT gets a unique ID
-    uint256 private _nextTokenId;
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
-    // A custom data structure to hold the information for each certificate
     struct Certificate {
         string studentName;
         string degreeName;
         uint256 issueDate;
+        string ipfsHash;
+        address issuer;
     }
 
-    // A mapping (like a dictionary) to link a unique token ID to its certificate details
-    mapping(uint256 => Certificate) private _certificateDetails;
+    mapping(uint256 => Certificate) public certificates;
+    mapping(address => bool) public authorizedInstitutions;
+    
+    event CertificateIssued(
+        uint256 indexed tokenId,
+        address indexed recipient,
+        string studentName,
+        string degreeName,
+        string ipfsHash,
+        address indexed issuer
+    );
 
-    // This is the constructor. It runs once when the contract is deployed.
-    // It sets the name ("VeriChainCertificate") and symbol ("VCC") for our NFT collection.
-    constructor() ERC721("VeriChainCertificate", "VCC") Ownable(msg.sender) {}
+    constructor() ERC721("VeriChain Certificate", "VCERT") {}
 
-    /**
-     * @dev This is the function to issue a new certificate.
-     * It can only be called by the contract "Owner" (the university).
-     * It creates (mints) a new NFT and assigns it to a student's wallet address.
-     */
-    function issueCertificate(address student, string memory studentName, string memory degreeName) public onlyOwner {
-        uint256 tokenId = _nextTokenId++;
-        _safeMint(student, tokenId); // This line creates the actual NFT
-        
-        // Store the details for this new NFT
-        _certificateDetails[tokenId] = Certificate({
+    modifier onlyAuthorized() {
+        require(authorizedInstitutions[msg.sender] || msg.sender == owner(), "Not authorized");
+        _;
+    }
+
+    function authorizeInstitution(address institution) external onlyOwner {
+        authorizedInstitutions[institution] = true;
+    }
+
+    function revokeInstitution(address institution) external onlyOwner {
+        authorizedInstitutions[institution] = false;
+    }
+
+    function issueCertificate(
+        address recipient,
+        string memory studentName,
+        string memory degreeName,
+        string memory ipfsHash
+    ) external onlyAuthorized returns (uint256) {
+        require(recipient != address(0), "Invalid recipient");
+        require(bytes(studentName).length > 0, "Student name required");
+        require(bytes(degreeName).length > 0, "Degree name required");
+        require(bytes(ipfsHash).length > 0, "IPFS hash required");
+
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+        _mint(recipient, newTokenId);
+
+        certificates[newTokenId] = Certificate({
             studentName: studentName,
             degreeName: degreeName,
-            issueDate: block.timestamp // Records the exact date and time of issuance
+            issueDate: block.timestamp,
+            ipfsHash: ipfsHash,
+            issuer: msg.sender
         });
+
+        emit CertificateIssued(
+            newTokenId,
+            recipient,
+            studentName,
+            degreeName,
+            ipfsHash,
+            msg.sender
+        );
+
+        return newTokenId;
     }
 
-    /**
-     * @dev This function retrieves the details for a given certificate NFT.
-     * It is a "view" function, meaning it's free to call and anyone can do it to verify.
-     */
-    function getCertificateDetails(uint256 tokenId) public view returns (Certificate memory) {
-        // FIXED: Use _ownerOf instead of _isMinted
-        require(_ownerOf(tokenId) != address(0), "Certificate NFT does not exist");
-        return _certificateDetails[tokenId];
+    function getCertificate(uint256 tokenId) external view returns (Certificate memory) {
+        require(_exists(tokenId), "Certificate does not exist");
+        return certificates[tokenId];
+    }
+
+    function verifyCertificate(uint256 tokenId) external view returns (
+        bool exists,
+        string memory studentName,
+        string memory degreeName,
+        uint256 issueDate,
+        string memory ipfsHash,
+        address issuer,
+        address owner
+    ) {
+        if (!_exists(tokenId)) {
+            return (false, "", "", 0, "", address(0), address(0));
+        }
+
+        Certificate memory cert = certificates[tokenId];
+        return (
+            true,
+            cert.studentName,
+            cert.degreeName,
+            cert.issueDate,
+            cert.ipfsHash,
+            cert.issuer,
+            ownerOf(tokenId)
+        );
+    }
+
+    function totalSupply() external view returns (uint256) {
+        return _tokenIds.current();
     }
 }

@@ -15,6 +15,7 @@ import {
 import { CursorProvider, Cursor } from './components/Cursor'
 import CertificateVerifier from './pages/CertificateVerifier'
 import AcademicInstitution from './pages/AcademicInstitution'
+import CertificateHolder from './pages/CertificateHolder'
 import './App.css'
 
 const CONTRACT_ADDRESS = "0x609B79dde0dE6D2A1a740486782E5D14B58FbD2c"
@@ -390,6 +391,16 @@ function HomePage() {
                   Revolutionary
                 </motion.span>
               </motion.div>
+              <motion.div className="title-line">
+                <motion.span
+                  className="title-word gradient-text"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 1, type: "spring" }}
+                >
+                  Degree
+                </motion.span>
+              </motion.div>
               
               <motion.div className="title-line">
                 <motion.span
@@ -682,8 +693,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/verifier" element={<CertificateVerifier />} />
+          <Route path="/verify" element={<CertificateVerifier />} />
           <Route path="/issuer" element={<AcademicInstitution />} />
-          <Route path="/student" element={<ComingSoon title="Student Portal" />} />
+          <Route path="/student" element={<CertificateHolder/>} />
         </Routes>
       </Router>
     </CursorProvider>
