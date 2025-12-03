@@ -65,7 +65,7 @@ VeriChain leverages **blockchain technology** to create tamper-proof, instantly 
 ### Installation
 
 1. **Clone the repository**
-git clone https://github.com/hellooo1234567889/stellar_winner.git
+git clone https://github.com/pankaj22-7/Veri-Chain.git
 cd stellar-hackathon
 
 2. **Install dependencies**
