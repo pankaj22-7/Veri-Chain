@@ -6,7 +6,6 @@
 [![Deployed on Sepolia](https://img.shields.io/badge/Deployed-Sepolia%20Testnet-blue)](https://sepolia.etherscan.io/address/0x609B79dde0dE6D2A1a740486782E5D14B58FbD2c)
 [![Built with React](https://img.shields.io/badge/Frontend-React%20+%20Vite-61dafb)](https://vitejs.dev/)
 [![Smart Contract](https://img.shields.io/badge/Smart%20Contract-Solidity-363636)](https://soliditylang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 🎯 Problem Statement
 
@@ -111,16 +110,6 @@ cd Frontend
 - 🌐 **IPFS Integration**: Decentralized metadata storage
 - 🔐 **Advanced Security**: Multi-signature functionality
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Hackathon Organizers** for the incredible opportunity
-- **Ethereum Foundation** for blockchain infrastructure
-- **OpenZeppelin** for secure smart contract templates
-- **React & Vite Teams** for amazing development tools
 
 ---
 
