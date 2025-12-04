@@ -40,7 +40,7 @@ VeriChain leverages **blockchain technology** to create tamper-proof, instantly 
 - **Network**: Ethereum Sepolia Testnet
 
 ### Frontend Application
-- **URL**: [VeriChain App](https://your-deployed-url.com)
+- **URL**: [VeriChain App](https://veri-chain-frontend.vercel.app/)
 - **Features**: Certificate issuance, verification, QR codes
 
 ## 🛠️ Technology Stack
